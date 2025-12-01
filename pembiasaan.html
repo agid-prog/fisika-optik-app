@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Pembiasan Cahaya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['$', '$']] },
+            startup: { pageReady: () => MathJax.startup.defaultPageReady() }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        canvas {
+            border: 3px solid #0099DD;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: #ffffff;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.5);
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+    <div class="max-w-7xl mx-auto">
+        <div class="glass p-8 rounded-2xl shadow-2xl mb-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold gradient-text mb-3">⚡ Simulasi Pembiasan Cahaya</h1>
+            <p class="text-gray-600 text-lg">Eksplorasi mendalam Hukum Snellius dengan berbagai material berbeda</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- PANEL KONTROL -->
+            <div class="lg:col-span-1 space-y-4">
+                <div class="glass p-6 rounded-xl shadow-xl">
+                    <h2 class="text-2xl font-bold text-indigo-700 mb-4">🎛️ Kontrol</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Medium 1 (Atas)</label>
+                            <select id="material1" class="w-full p-2.5 border-2 border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 font-semibold">
+                                <option value="1.0003">🌫️ Udara (1.0003)</option>
+                                <option value="1.33" selected>💧 Air (1.33)</option>
+                                <option value="1.36">💎 Kuarsa Cair (1.36)</option>
+                                <option value="1.46">🧴 Gliserin (1.46)</option>
+                                <option value="1.47">🪟 Kaca Jendela (1.47)</option>
+                                <option value="1.50">🔬 Kaca Optik (1.50)</option>
+                                <option value="1.52">👓 Kaca Crown (1.52)</option>
+                                <option value="1.54">🧊 Plastik Akrilik (1.54)</option>
+                                <option value="1.61">🔭 Kaca Flint (1.61)</option>
+                                <option value="1.66">🔮 Safir (1.66)</option>
+                                <option value="2.42">💍 Berlian (2.42)</option>
+                            </select>
+                            <div class="mt-2 text-xs text-indigo-700 font-semibold">Indeks Bias: <span id="n1-val">1.33</span></div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-lg">
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Medium 2 (Bawah)</label>
+                            <select id="material2" class="w-full p-2.5 border-2 border-cyan-300 rounded-lg focus:ring-2 focus:ring-cyan-500 font-semibold">
+                                <option value="1.0003" selected>🌫️ Udara (1.0003)</option>
+                                <option value="1.33">💧 Air (1.33)</option>
+                                <option value="1.36">💎 Kuarsa Cair (1.36)</option>
+                                <option value="1.46">🧴 Gliserin (1.46)</option>
+                                <option value="1.47">🪟 Kaca Jendela (1.47)</option>
+                                <option value="1.50">🔬 Kaca Optik (1.50)</option>
+                                <option value="1.52">👓 Kaca Crown (1.52)</option>
+                                <option value="1.54">🧊 Plastik Akrilik (1.54)</option>
+                                <option value="1.61">🔭 Kaca Flint (1.61)</option>
+                                <option value="1.66">🔮 Safir (1.66)</option>
+                                <option value="2.42">💍 Berlian (2.42)</option>
+                            </select>
+                            <div class="mt-2 text-xs text-cyan-700 font-semibold">Indeks Bias: <span id="n2-val">1.0003</span></div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg">
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Sudut Datang: <span id="angle-display" class="text-purple-700">45°</span></label>
+                            <input type="range" id="angleSlider" min="0" max="90" value="45" step="0.5" class="w-full h-3 bg-purple-200 rounded-lg cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>0°</span>
+                                <span>45°</span>
+                                <span>90°</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="showGrid" checked class="mr-2 w-5 h-5">
+                                <span class="text-sm font-semibold text-gray-800">📐 Tampilkan Grid</span>
+                            </label>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-lg">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="showNormal" checked class="mr-2 w-5 h-5">
+                                <span class="text-sm font-semibold text-gray-800">📏 Garis Normal</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRESET CEPAT -->
+                <div class="glass p-6 rounded-xl shadow-xl">
+                    <h3 class="text-lg font-bold text-indigo-700 mb-3">⚡ Preset Cepat</h3>
+                    <div class="space-y-2">
+                        <button onclick="setPreset('air-udara')" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition">Air → Udara</button>
+                        <button onclick="setPreset('kaca-udara')" class="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg transition">Kaca → Udara</button>
+                        <button onclick="setPreset('berlian-air')" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-lg transition">Berlian → Air</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AREA VISUALISASI & HASIL -->
+            <div class="lg:col-span-3 space-y-6">
+                <!-- CANVAS -->
+                <div class="glass p-6 rounded-xl shadow-xl">
+                    <h2 class="text-2xl font-bold text-indigo-700 mb-4">🎨 Visualisasi Real-Time</h2>
+                    <div class="flex justify-center">
+                        <canvas id="canvas" width="700" height="500"></canvas>
+                    </div>
+                </div>
+
+                <!-- STATISTIK -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="stat-card glass p-5 rounded-xl shadow-lg">
+                        <div class="text-sm text-gray-600 font-semibold mb-1">Sudut Datang</div>
+                        <div class="text-3xl font-extrabold text-blue-600" id="stat-theta1">45.0°</div>
+                        <div class="text-xs text-gray-500 mt-1">θ₁</div>
+                    </div>
+                    <div class="stat-card glass p-5 rounded-xl shadow-lg">
+                        <div class="text-sm text-gray-600 font-semibold mb-1">Sudut Bias</div>
+                        <div class="text-3xl font-extrabold text-green-600" id="stat-theta2">--</div>
+                        <div class="text-xs text-gray-500 mt-1">θ₂</div>
+                    </div>
+                    <div class="stat-card glass p-5 rounded-xl shadow-lg">
+                        <div class="text-sm text-gray-600 font-semibold mb-1">Sudut Kritis</div>
+                        <div class="text-3xl font-extrabold text-red-600" id="stat-thetac">--</div>
+                        <div class="text-xs text-gray-500 mt-1">θc</div>
+                    </div>
+                </div>
+
+                <!-- INFO PANEL -->
+                <div class="glass p-6 rounded-xl shadow-xl">
+                    <h3 class="text-xl font-bold text-indigo-700 mb-3">📊 Informasi Detail</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <strong>Hukum Snellius:</strong>
+                            <div class="text-xs mt-1 font-mono">n₁ sin(θ₁) = n₂ sin(θ₂)</div>
+                        </div>
+                        <div class="bg-green-50 p-3 rounded-lg">
+                            <strong>Status:</strong>
+                            <div class="text-xs mt-1" id="status-text">Normal Refraction</div>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-lg">
+                            <strong>Rasio n:</strong>
+                            <div class="text-xs mt-1" id="ratio-text">--</div>
+                        </div>
+                        <div class="bg-red-50 p-3 rounded-lg">
+                            <strong>Kecepatan Cahaya:</strong>
+                            <div class="text-xs mt-1" id="speed-text">--</div>
+                        </div>
+                    </div>
+                    <div id="tir-warning" class="hidden mt-4 bg-red-100 border-l-4 border-red-500 p-4 rounded">
+                        <p class="text-red-800 font-bold">⚠️ REFLEKSI INTERNAL TOTAL (TIR)</p>
+                        <p class="text-red-700 text-sm mt-1">Cahaya tidak dapat melewati medium 2 karena sudut melebihi sudut kritis!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width, H = canvas.height, MID = H / 2;
+
+        const slider = document.getElementById('angleSlider');
+        const mat1 = document.getElementById('material1');
+        const mat2 = document.getElementById('material2');
+        const showGrid = document.getElementById('showGrid');
+        const showNormal = document.getElementById('showNormal');
+
+        function deg2rad(d) { return d * Math.PI / 180; }
+        function rad2deg(r) { return r * 180 / Math.PI; }
+
+        function drawGrid() {
+            if (!showGrid.checked) return;
+            ctx.save();
+            ctx.strokeStyle = '#475569'; // Warna lebih gelap
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([5, 5]); // Garis putus-putus
+            
+            // Garis vertikal
+            for (let i = 0; i <= W; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, H);
+                ctx.stroke();
+            }
+            
+            // Garis horizontal
+            for (let i = 0; i <= H; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(W, i);
+                ctx.stroke();
+            }
+            
+            ctx.setLineDash([]);
+            ctx.restore();
+        }
+
+        function drawInterface() {
+            // Background gradien dulu
+            const grad1 = ctx.createLinearGradient(0, 0, 0, MID);
+            grad1.addColorStop(0, '#E0F4FF');
+            grad1.addColorStop(1, '#7DD3FC');
+            ctx.fillStyle = grad1;
+            ctx.fillRect(0, 0, W, MID);
+
+            const grad2 = ctx.createLinearGradient(0, MID, 0, H);
+            grad2.addColorStop(0, '#38BDF8');
+            grad2.addColorStop(1, '#0099DD');
+            ctx.fillStyle = grad2;
+            ctx.fillRect(0, MID, W, MID);
+
+            ctx.strokeStyle = '#0099DD';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(0, MID);
+            ctx.lineTo(W, MID);
+            ctx.stroke();
+
+            if (showNormal.checked) {
+                ctx.setLineDash([10, 5]);
+                ctx.strokeStyle = '#6b7280';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(W/2, 0);
+                ctx.lineTo(W/2, H);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+
+        function drawRay(angle, color, side, width = 4) {
+            const len = 250;
+            const cx = W / 2, cy = MID;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = width;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = color;
+
+            if (side === 1) {
+                const rad = deg2rad(90 + angle);
+                const sx = cx + len * Math.cos(rad);
+                const sy = cy + len * Math.sin(rad);
+                ctx.beginPath();
+                ctx.moveTo(sx, sy);
+                ctx.lineTo(cx, cy);
+                ctx.stroke();
+            } else {
+                const rad = deg2rad(270 + angle);
+                const ex = cx + len * Math.cos(rad);
+                const ey = cy + len * Math.sin(rad);
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(ex, ey);
+                ctx.stroke();
+            }
+            ctx.shadowBlur = 0;
+        }
+
+        function drawArc(angle, label, color, side) {
+            if (angle === 0 || angle === 90) return;
+            const r = 50;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            if (side === 1) {
+                ctx.arc(W/2, MID, r, deg2rad(90), deg2rad(90 + angle));
+            } else {
+                ctx.arc(W/2, MID, r, deg2rad(90), deg2rad(90 - angle));
+            }
+            ctx.stroke();
+
+            const labelR = 70;
+            const labelAng = side === 1 ? deg2rad(90 + angle/2) : deg2rad(90 - angle/2);
+            const lx = W/2 + labelR * Math.cos(labelAng);
+            const ly = MID + labelR * Math.sin(labelAng);
+            ctx.fillStyle = color;
+            ctx.font = 'bold 16px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, lx, ly);
+        }
+
+        function update() {
+            const n1 = parseFloat(mat1.value);
+            const n2 = parseFloat(mat2.value);
+            const theta1 = parseFloat(slider.value);
+            const theta1Rad = deg2rad(theta1);
+
+            document.getElementById('angle-display').textContent = theta1.toFixed(1) + '°';
+            document.getElementById('n1-val').textContent = n1.toFixed(4);
+            document.getElementById('n2-val').textContent = n2.toFixed(4);
+            document.getElementById('stat-theta1').textContent = theta1.toFixed(1) + '°';
+
+            ctx.clearRect(0, 0, W, H);
+            drawInterface();
+            drawGrid(); // Grid digambar TERAKHIR supaya di atas semua
+
+            let thetaC = NaN;
+            if (n1 > n2) {
+                thetaC = rad2deg(Math.asin(n2 / n1));
+                document.getElementById('stat-thetac').textContent = thetaC.toFixed(2) + '°';
+            } else {
+                document.getElementById('stat-thetac').textContent = 'N/A';
+            }
+
+            let isTIR = false;
+            let theta2 = NaN;
+            
+            if (n1 > n2 && theta1 > thetaC) {
+                isTIR = true;
+                document.getElementById('stat-theta2').textContent = 'TIR';
+                document.getElementById('stat-theta2').className = 'text-3xl font-extrabold text-red-600';
+                document.getElementById('tir-warning').classList.remove('hidden');
+                document.getElementById('status-text').textContent = '❌ Total Internal Reflection';
+                
+                drawRay(theta1, '#f59e0b', 1, 5);
+                drawArc(theta1, 'θ₁', '#f59e0b', 1);
+                
+                const reflectRad = deg2rad(90 - theta1);
+                const len = 250;
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 5;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#ef4444';
+                ctx.beginPath();
+                ctx.moveTo(W/2, MID);
+                ctx.lineTo(W/2 + len * Math.cos(reflectRad), MID + len * Math.sin(reflectRad));
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+                drawArc(theta1, 'θᵣ', '#ef4444', 1);
+            } else {
+                const sinTheta2 = (n1 / n2) * Math.sin(theta1Rad);
+                if (sinTheta2 <= 1) {
+                    theta2 = rad2deg(Math.asin(sinTheta2));
+                    document.getElementById('stat-theta2').textContent = theta2.toFixed(2) + '°';
+                    document.getElementById('stat-theta2').className = 'text-3xl font-extrabold text-green-600';
+                    document.getElementById('tir-warning').classList.add('hidden');
+                    document.getElementById('status-text').textContent = '✅ Normal Refraction';
+
+                    drawRay(theta1, '#f59e0b', 1, 5);
+                    drawArc(theta1, 'θ₁', '#f59e0b', 1);
+                    drawRay(theta2, '#10b981', -1, 5);
+                    drawArc(theta2, 'θ₂', '#10b981', -1);
+                }
+            }
+
+            document.getElementById('ratio-text').textContent = `n₁/n₂ = ${(n1/n2).toFixed(4)}`;
+            const c = 299792458;
+            const v1 = c / n1;
+            const v2 = c / n2;
+            document.getElementById('speed-text').textContent = `v₁ = ${(v1/1e8).toFixed(2)}×10⁸ m/s, v₂ = ${(v2/1e8).toFixed(2)}×10⁸ m/s`;
+
+            if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function setPreset(type) {
+            if (type === 'air-udara') {
+                mat1.value = '1.33';
+                mat2.value = '1.0003';
+                slider.value = '48';
+            } else if (type === 'kaca-udara') {
+                mat1.value = '1.52';
+                mat2.value = '1.0003';
+                slider.value = '42';
+            } else if (type === 'berlian-air') {
+                mat1.value = '2.42';
+                mat2.value = '1.33';
+                slider.value = '30';
+            }
+            update();
+        }
+
+        slider.addEventListener('input', update);
+        mat1.addEventListener('change', update);
+        mat2.addEventListener('change', update);
+        showGrid.addEventListener('change', update);
+        showNormal.addEventListener('change', update);
+
+        window.addEventListener('load', () => setTimeout(update, 500));
+    </script>
+</body>
+</html>

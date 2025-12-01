@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Refleksi | Optik Kuantitatif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .theme-blue {
+            background-color: #0099DD;
+        }
+        .text-theme-blue {
+            color: #0099DD;
+        }
+        .border-theme-blue {
+            border-color: #0099DD;
+        }
+        .hover\:bg-theme-blue-dark:hover {
+            background-color: #0077B3;
+        }
+        #refCanvas {
+            background-color: #E6F7FF; /* Warna background canvas yang cerah */
+            border: 2px solid #0099DD;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            touch-action: none; /* Penting untuk interaksi sentuhan/mouse */
+        }
+    </style>
+    <!-- MathJax untuk Formula Akademik -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</head>
+<body class="p-0">
+
+    <!-- Navbar Lengkap -->
+    <nav class="theme-blue sticky top-0 z-50 shadow-xl mb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center h-14 space-x-2 md:space-x-4">
+                <a href="/" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Beranda</a>
+                <a href="/refleksi" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-bold hover:bg-theme-blue-dark transition duration-150">Simulasi Refleksi</a>
+                <a href="/pembiasaan" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Simulasi Pembiasan</a>
+                <a href="/material" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Database Material</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Konten Simulasi -->
+    <div class="max-w-4xl mx-auto p-6 md:p-8 bg-white rounded-2xl shadow-2xl mb-10 border-t-8 border-theme-blue">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-2 text-center">Simulasi Hukum Pemantulan Cahaya</h1>
+        <p class="text-lg text-gray-600 mb-6 text-center">Visualisasikan dan validasi bahwa Sudut Datang ($\theta_i$) selalu sama dengan Sudut Pantul ($\theta_r$).</p>
+        
+        <!-- Panel Kontrol dan Hasil -->
+        <div class="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+            <div>
+                <p class="text-sm font-semibold text-gray-500">Sudut Datang ($\theta_i$)</p>
+                <p id="sudutDatangDisplay" class="text-2xl font-bold text-theme-blue">0.00°</p>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-gray-500">Sudut Pantul ($\theta_r$)</p>
+                <p id="sudutPantulDisplay" class="text-2xl font-bold text-red-500">0.00°</p>
+            </div>
+        </div>
+        
+        <!-- Canvas Simulasi -->
+        <div class="flex justify-center">
+            <canvas id="refCanvas" width="600" height="400" class="shadow-xl"></canvas>
+        </div>
+
+        <p class="mt-4 text-center text-gray-700 font-medium">
+            <span class="text-red-600 font-extrabold">Instruksi:</span> Tarik dan geser titik kontrol merah di kuadran kiri atas untuk mengubah sudut datang sinar.
+        </p>
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById("refCanvas");
+        const ctx = canvas.getContext("2d");
+        
+        // Posisi default
+        let INTERSECTION_X = 300;
+        let INTERSECTION_Y = 200;
+
+        // Titik kontrol sinar datang
+        let mouseX = 150;
+        let mouseY = 300; 
+        
+        let dragging = false;
+
+        // Ambil elemen display
+        const sudutDatangDisplay = document.getElementById("sudutDatangDisplay");
+        const sudutPantulDisplay = document.getElementById("sudutPantulDisplay");
+
+        function calculateAngles() {
+            // Hitung delta X dan Y dari titik kontrol ke titik interseksi
+            let deltaX = INTERSECTION_X - mouseX;
+            let deltaY = mouseY - INTERSECTION_Y; // Y semakin besar ke bawah
+            
+            // Sudut datang (terhadap sumbu X/Normal)
+            let angleRad = Math.atan2(deltaY, deltaX);
+            let angleDeg = Math.abs(angleRad * 180 / Math.PI);
+
+            // Karena kita menggunakan cermin vertikal (di x=300), kita menghitung sudut terhadap garis normal (sumbu X)
+            // Sudut 0 derajat adalah pada garis normal, 90 derajat sejajar cermin
+            let theta_i = Math.abs(90 - angleDeg);
+
+            // Hukum Pemantulan: theta_r = theta_i
+            let theta_r = theta_i;
+
+            // Update tampilan
+            sudutDatangDisplay.textContent = `${theta_i.toFixed(2)}°`;
+            sudutPantulDisplay.textContent = `${theta_r.toFixed(2)}°`;
+            
+            return { theta_i, theta_r };
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 1. Gambar Cermin (bidang pemantul)
+            ctx.beginPath();
+            ctx.moveTo(INTERSECTION_X, 0);
+            ctx.lineTo(INTERSECTION_X, canvas.height);
+            ctx.strokeStyle = "#0099DD"; /* Warna tema biru */
+            ctx.lineWidth = 6;
+            ctx.stroke();
+
+            // 2. Garis Normal (putih)
+            ctx.beginPath();
+            ctx.setLineDash([5, 5]); /* Garis putus-putus */
+            ctx.moveTo(INTERSECTION_X, INTERSECTION_Y);
+            ctx.lineTo(INTERSECTION_X - 100, INTERSECTION_Y); // Kiri
+            ctx.lineTo(INTERSECTION_X + 100, INTERSECTION_Y); // Kanan (Tidak perlu, karena normal harus tegak lurus cermin)
+            ctx.strokeStyle = "purple";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.setLineDash([]); // Reset garis putus-putus
+            
+            // 3. Titik Interseksi
+            ctx.beginPath();
+            ctx.arc(INTERSECTION_X, INTERSECTION_Y, 4, 0, Math.PI * 2);
+            ctx.fillStyle = "black";
+            ctx.fill();
+
+            const angles = calculateAngles();
+            const theta_i = angles.theta_i;
+            
+            // 4. Hitung posisi sinar pantul
+            // Sinar datang (kontrol mouseX, mouseY) -> (INTERSECTION_X, INTERSECTION_Y)
+            let dx_i = INTERSECTION_X - mouseX;
+            let dy_i = INTERSECTION_Y - mouseY; 
+            
+            // Sinar pantul: Refleksi sempurna terhadap garis normal (sumbu Y di canvas)
+            // (x', y') = (x_cermin + (x_cermin - x_datang), y_datang)
+            // Sinar Pantul (INTERSECTION_X, INTERSECTION_Y) -> (x_pantul, y_pantul)
+            
+            let x_start_ray = mouseX;
+            let y_start_ray = mouseY;
+
+            // Panjang sinar pantul agar terlihat bagus
+            const rayLength = 200; 
+
+            // Sudut datang (terhadap garis normal)
+            let alpha_i = Math.atan2(INTERSECTION_Y - mouseY, INTERSECTION_X - mouseX);
+
+            // Sudut pantul harus simetris terhadap sumbu normal (Horizontal)
+            let alpha_r = Math.PI - alpha_i; 
+
+            let x_end_r = INTERSECTION_X + rayLength * Math.cos(alpha_r);
+            let y_end_r = INTERSECTION_Y - rayLength * Math.sin(alpha_r);
+
+
+            // 5. Gambar Sinar Datang (Merah)
+            ctx.beginPath();
+            ctx.moveTo(mouseX, mouseY);
+            ctx.lineTo(INTERSECTION_X, INTERSECTION_Y);
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // 6. Gambar Sinar Pantul (Hijau - Warna Kontras yang Canggih)
+            ctx.beginPath();
+            ctx.moveTo(INTERSECTION_X, INTERSECTION_Y);
+            ctx.lineTo(x_end_r, y_end_r);
+            ctx.strokeStyle = "green";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // 7. Titik Kontrol
+            ctx.beginPath();
+            ctx.arc(mouseX, mouseY, 8, 0, Math.PI * 2);
+            ctx.fillStyle = "red";
+            ctx.shadowColor = "rgba(255, 0, 0, 0.7)";
+            ctx.shadowBlur = 10;
+            ctx.fill();
+            ctx.shadowBlur = 0; // Reset shadow
+
+            // 8. Tulis Sudut (Akademik)
+            
+            // Fungsi untuk menggambar busur sudut
+            function drawAngleArc(startAngle, endAngle, color, radius, text, offset = 0) {
+                ctx.beginPath();
+                ctx.arc(INTERSECTION_X, INTERSECTION_Y, radius, startAngle, endAngle, true);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Hitung posisi label
+                let middleAngle = (startAngle + endAngle) / 2;
+                let textX = INTERSECTION_X + (radius + 15) * Math.cos(middleAngle);
+                let textY = INTERSECTION_Y + (radius + 15) * Math.sin(middleAngle);
+
+                ctx.fillStyle = color;
+                ctx.font = "14px Inter";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(text, textX, textY);
+            }
+            
+            // Sudut dihitung dari Garis Normal (Horizontal, 180 derajat)
+            let normal_angle_rad = Math.PI; // 180 derajat
+            let incident_angle_rad = Math.atan2(INTERSECTION_Y - mouseY, INTERSECTION_X - mouseX);
+            let reflected_angle_rad = Math.PI + (Math.PI - incident_angle_rad); // Refleksi
+
+            // Sudut datang (merah)
+            drawAngleArc(normal_angle_rad, incident_angle_rad, "red", 50, 'θᵢ');
+
+            // Sudut pantul (hijau)
+            drawAngleArc(normal_angle_rad, alpha_r, "green", 50, 'θᵣ');
+        }
+
+        // --- Event Listeners untuk Interaksi Mouse dan Sentuhan ---
+        
+        function handleStart(e) {
+            e.preventDefault();
+            let rect = canvas.getBoundingClientRect();
+            let x, y;
+
+            if (e.touches) {
+                x = e.touches[0].clientX - rect.left;
+                y = e.touches[0].clientY - rect.top;
+            } else {
+                x = e.clientX - rect.left;
+                y = e.clientY - rect.top;
+            }
+
+            // Periksa apakah klik/sentuhan berada di dekat titik kontrol (radius 15)
+            if(Math.abs(x - mouseX) < 15 && Math.abs(y - mouseY) < 15) {
+                dragging = true;
+            }
+        }
+
+        function handleMove(e) {
+            if (dragging) {
+                e.preventDefault();
+                let rect = canvas.getBoundingClientRect();
+                let x, y;
+
+                if (e.touches) {
+                    x = e.touches[0].clientX - rect.left;
+                    y = e.touches[0].clientY - rect.top;
+                } else {
+                    x = e.clientX - rect.left;
+                    y = e.clientY - rect.top;
+                }
+                
+                // Batasi pergerakan mouseX dan mouseY di kuadran kiri-bawah cermin
+                mouseX = Math.max(10, Math.min(INTERSECTION_X - 10, x));
+                mouseY = Math.max(INTERSECTION_Y + 10, Math.min(canvas.height - 10, y));
+
+                // Jika ingin memungkinkan pergerakan di kuadran kiri-atas:
+                // mouseX = Math.max(10, Math.min(INTERSECTION_X - 10, x));
+                // mouseY = Math.max(10, Math.min(canvas.height - 10, y)); // y bisa ke atas dan bawah
+
+                draw();
+            }
+        }
+
+        function handleEnd(e) { 
+            dragging = false; 
+        }
+
+        // Mouse Events
+        canvas.addEventListener("mousedown", handleStart);
+        canvas.addEventListener("mousemove", handleMove);
+        canvas.addEventListener("mouseup", handleEnd);
+        canvas.addEventListener("mouseleave", handleEnd);
+
+        // Touch Events (untuk responsif mobile)
+        canvas.addEventListener("touchstart", handleStart, { passive: false });
+        canvas.addEventListener("touchmove", handleMove, { passive: false });
+        canvas.addEventListener("touchend", handleEnd);
+
+        // Mulai simulasi
+        window.onload = function() {
+            draw();
+        };
+
+    </script>
+</body>
+</html>
