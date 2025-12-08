@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Polarisasi Cahaya | Optik Kuantitatif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['$', '$']] },
+            startup: { pageReady: () => MathJax.startup.defaultPageReady() }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        canvas {
+            border: 3px solid #0099DD;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #000000 0%, #1a1a2e 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.5);
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        .polarizer-visual {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #0099DD;
+            border-radius: 8px;
+            position: relative;
+            background: rgba(0, 153, 221, 0.1);
+        }
+        .polarizer-line {
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            background: #0099DD;
+            left: 50%;
+            top: 0;
+            transform-origin: center;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .intensity-bar {
+            height: 20px;
+            background: linear-gradient(90deg, #000 0%, #0099DD 100%);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .intensity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0099DD 0%, #00ff88 100%);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+    <div class="max-w-7xl mx-auto">
+        <div class="glass p-8 rounded-2xl shadow-2xl mb-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold gradient-text mb-3">⚡ Simulasi Polarisasi Cahaya</h1>
+            <p class="text-gray-600 text-lg">Eksplorasi fenomena polarisasi cahaya dengan Hukum Malus dan berbagai konfigurasi polarizer</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- PANEL KONTROL -->
+            <div class="lg:col-span-1 space-y-4">
+                <div class="glass p-6 rounded-xl shadow-xl">
+                    <h2 class="text-2xl font-bold text-indigo-700 mb-4">🎛️ Kontrol Polarizer</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Intensitas Awal (I₀)</label>
+                            <input type="range" id="intensitySlider" min="0" max="100" value="100" step="1" class="w-full h-3 bg-blue-200 rounded-lg cursor-pointer">
+                            <div class="mt-2 text-xs text-indigo-700 font-semibold">Nilai: <span id="intensity-val">100</span>%</div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg">
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Sudut Polarizer 1 (θ₁)</label>
+                            <input type="range" id="angle1Slider" min="0" max="180" value="0" step="1" class="w-full h-3 bg-purple-200 rounded-lg cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>0°</span>
+                                <span id="angle1-display" class="text-purple-700 font-bold">0°</span>
+                                <span>180°</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-lg">
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Sudut Polarizer 2 (θ₂)</label>
+                            <input type="range" id="angle2Slider" min="0" max="180" value="45" step="1" class="w-full h-3 bg-cyan-200 rounded-lg cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>0°</span>
+                                <span id="angle2-display" class="text-cyan-700 font-bold">45°</span>
+                                <span>180°</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-pink-50 to-red-50 p-4 rounded-lg">
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Sudut Polarizer 3 (θ₃)</label>
+                            <input type="range" id="angle3Slider" min="0" max="180" value="90" step="1" class="w-full h-3 bg-pink-200 rounded-lg cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>0°</span>
+                                <span id="angle3-display" class="text-pink-700 font-bold">90°</span>
+                                <span>180°</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="enablePolarizer3" class="mr-2 w-5 h-5">
+                                <span class="text-sm font-semibold text-gray-800">🔬 Aktifkan Polarizer 3</span>
+                            </label>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-lg">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="showVectors" checked class="mr-2 w-5 h-5">
+                                <span class="text-sm font-semibold text-gray-800">📐 Tampilkan Vektor</span>
+                            </label>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-violet-50 to-purple-50 p-4 rounded-lg">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="animateLight" checked class="mr-2 w-5 h-5">
+                                <span class="text-sm font-semibold text-gray-800">✨ Animasi Cahaya</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRESET CEPAT -->
+                <div class="glass p-6 rounded-xl shadow-xl">
+                    <h3 class="text-lg font-bold text-indigo-700 mb-3">⚡ Preset Cepat</h3>
+                    <div class="space-y-2">
+                        <button onclick="setPreset('crossed')" class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition">Crossed (90°)</button>
+                        <button onclick="setPreset('parallel')" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition">Parallel (0°)</button>
+                        <button onclick="setPreset('brewster')" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition">Sudut Brewster</button>
+                        <button onclick="setPreset('triple')" class="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg transition">Triple Polarizer</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AREA VISUALISASI & HASIL -->
+            <div class="lg:col-span-3 space-y-6">
+                <!-- CANVAS -->
+                <div class="glass p-6 rounded-xl shadow-xl">
+                    <h2 class="text-2xl font-bold text-indigo-700 mb-4">🎨 Visualisasi Real-Time</h2>
+                    <div class="flex justify-center">
+                        <canvas id="canvas" width="800" height="400"></canvas>
+                    </div>
+                </div>
+
+                <!-- VISUAL POLARIZER -->
+                <div class="glass p-6 rounded-xl shadow-xl">
+                    <h3 class="text-xl font-bold text-indigo-700 mb-4">🔄 Orientasi Polarizer</h3>
+                    <div class="flex justify-around items-center">
+                        <div class="text-center">
+                            <div class="polarizer-visual mx-auto mb-2">
+                                <div class="polarizer-line" id="pol1-visual"></div>
+                            </div>
+                            <p class="text-sm font-bold text-gray-700">Polarizer 1</p>
+                            <p class="text-xs text-gray-500" id="pol1-angle">0°</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="polarizer-visual mx-auto mb-2">
+                                <div class="polarizer-line" id="pol2-visual"></div>
+                            </div>
+                            <p class="text-sm font-bold text-gray-700">Polarizer 2</p>
+                            <p class="text-xs text-gray-500" id="pol2-angle">45°</p>
+                        </div>
+                        <div class="text-center" id="pol3-container">
+                            <div class="polarizer-visual mx-auto mb-2" style="opacity: 0.3;">
+                                <div class="polarizer-line" id="pol3-visual"></div>
+                            </div>
+                            <p class="text-sm font-bold text-gray-400">Polarizer 3</p>
+                            <p class="text-xs text-gray-400" id="pol3-angle">90° (Nonaktif)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATISTIK INTENSITAS -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="stat-card glass p-5 rounded-xl shadow-lg">
+                        <div class="text-sm text-gray-600 font-semibold mb-1">Intensitas Awal</div>
+                        <div class="text-3xl font-extrabold text-blue-600" id="stat-i0">100%</div>
+                        <div class="text-xs text-gray-500 mt-1">I₀</div>
+                    </div>
+                    <div class="stat-card glass p-5 rounded-xl shadow-lg">
+                        <div class="text-sm text-gray-600 font-semibold mb-1">Setelah Pol. 1</div>
+                        <div class="text-3xl font-extrabold text-purple-600" id="stat-i1">--</div>
+                        <div class="text-xs text-gray-500 mt-1">I₁</div>
+                    </div>
+                    <div class="stat-card glass p-5 rounded-xl shadow-lg">
+                        <div class="text-sm text-gray-600 font-semibold mb-1">Setelah Pol. 2</div>
+                        <div class="text-3xl font-extrabold text-cyan-600" id="stat-i2">--</div>
+                        <div class="text-xs text-gray-500 mt-1">I₂</div>
+                    </div>
+                    <div class="stat-card glass p-5 rounded-xl shadow-lg">
+                        <div class="text-sm text-gray-600 font-semibold mb-1">Intensitas Akhir</div>
+                        <div class="text-3xl font-extrabold text-red-600" id="stat-final">--</div>
+                        <div class="text-xs text-gray-500 mt-1">I_final</div>
+                    </div>
+                </div>
+
+                <!-- INFO PANEL -->
+                <div class="glass p-6 rounded-xl shadow-xl">
+                    <h3 class="text-xl font-bold text-indigo-700 mb-3">📊 Hukum Malus & Perhitungan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <strong>Hukum Malus:</strong>
+                            <div class="text-xs mt-2 font-mono">I = I₀ cos²(θ)</div>
+                            <p class="text-xs text-gray-600 mt-2">θ = sudut antara polarizer</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <strong>Intensitas Bar:</strong>
+                            <div class="intensity-bar mt-2">
+                                <div class="intensity-fill" id="intensity-bar" style="width: 100%"></div>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-2 text-center" id="intensity-percent">100%</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <strong>Sudut Relatif:</strong>
+                            <div class="text-xs mt-2" id="angle-diff">Δθ₁₂ = 45°</div>
+                            <div class="text-xs mt-1" id="angle-diff2">Δθ₂₃ = 45°</div>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg">
+                            <strong>Status:</strong>
+                            <div class="text-xs mt-2" id="status-text">Normal Polarization</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width, H = canvas.height;
+
+        let animationFrame = 0;
+        let animationEnabled = true;
+
+        const sliders = {
+            intensity: document.getElementById('intensitySlider'),
+            angle1: document.getElementById('angle1Slider'),
+            angle2: document.getElementById('angle2Slider'),
+            angle3: document.getElementById('angle3Slider')
+        };
+
+        const checkboxes = {
+            pol3: document.getElementById('enablePolarizer3'),
+            vectors: document.getElementById('showVectors'),
+            animate: document.getElementById('animateLight')
+        };
+
+        function deg2rad(d) { return d * Math.PI / 180; }
+
+        function drawWave(x, y, amplitude, angle, color, alpha = 1) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(deg2rad(angle));
+            
+            ctx.strokeStyle = color;
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            const waveLength = 150;
+            const offset = animationEnabled ? (animationFrame % 50) : 0;
+            
+            for (let i = -waveLength; i <= waveLength; i += 2) {
+                const phase = (i + offset) * 0.1;
+                const wave = amplitude * Math.sin(phase);
+                if (i === -waveLength) {
+                    ctx.moveTo(i, wave);
+                } else {
+                    ctx.lineTo(i, wave);
+                }
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawPolarizer(x, y, angle, label) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            ctx.fillStyle = 'rgba(0, 153, 221, 0.3)';
+            ctx.fillRect(-30, -60, 60, 120);
+            
+            ctx.strokeStyle = '#0099DD';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(-30, -60, 60, 120);
+            
+            ctx.save();
+            ctx.rotate(deg2rad(angle));
+            ctx.strokeStyle = '#0099DD';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let i = -60; i <= 60; i += 10) {
+                ctx.moveTo(-25, i);
+                ctx.lineTo(25, i);
+            }
+            ctx.stroke();
+            ctx.restore();
+            
+            ctx.fillStyle = '#0099DD';
+            ctx.font = 'bold 14px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, 0, 80);
+            ctx.fillText(angle + '°', 0, 95);
+            
+            ctx.restore();
+        }
+
+        function drawArrow(x, y, angle, length, color, label) {
+            if (!checkboxes.vectors.checked) return;
+            
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(deg2rad(angle));
+            
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 3;
+            
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(length, 0);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(length, 0);
+            ctx.lineTo(length - 10, -5);
+            ctx.lineTo(length - 10, 5);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.fillStyle = color;
+            ctx.font = 'bold 12px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, length / 2, -10);
+            
+            ctx.restore();
+        }
+
+        function calculateIntensities() {
+            const I0 = parseFloat(sliders.intensity.value);
+            const theta1 = parseFloat(sliders.angle1.value);
+            const theta2 = parseFloat(sliders.angle2.value);
+            const theta3 = parseFloat(sliders.angle3.value);
+            const pol3Enabled = checkboxes.pol3.checked;
+
+            const I1 = I0 * 0.5;
+            
+            const deltaTheta12 = Math.abs(theta2 - theta1);
+            const I2 = I1 * Math.pow(Math.cos(deg2rad(deltaTheta12)), 2);
+            
+            let Ifinal = I2;
+            let I3 = 0;
+            
+            if (pol3Enabled) {
+                const deltaTheta23 = Math.abs(theta3 - theta2);
+                I3 = I2 * Math.pow(Math.cos(deg2rad(deltaTheta23)), 2);
+                Ifinal = I3;
+            }
+
+            return { I0, I1, I2, I3, Ifinal, theta1, theta2, theta3, deltaTheta12, deltaTheta23: Math.abs(theta3 - theta2), pol3Enabled };
+        }
+
+        function updateDisplay() {
+            const data = calculateIntensities();
+            
+            document.getElementById('intensity-val').textContent = data.I0.toFixed(0);
+            document.getElementById('angle1-display').textContent = data.theta1.toFixed(0) + '°';
+            document.getElementById('angle2-display').textContent = data.theta2.toFixed(0) + '°';
+            document.getElementById('angle3-display').textContent = data.theta3.toFixed(0) + '°';
+            
+            document.getElementById('stat-i0').textContent = data.I0.toFixed(1) + '%';
+            document.getElementById('stat-i1').textContent = data.I1.toFixed(1) + '%';
+            document.getElementById('stat-i2').textContent = data.I2.toFixed(1) + '%';
+            document.getElementById('stat-final').textContent = data.Ifinal.toFixed(1) + '%';
+            
+            document.getElementById('intensity-bar').style.width = data.Ifinal + '%';
+            document.getElementById('intensity-percent').textContent = data.Ifinal.toFixed(1) + '%';
+            
+            document.getElementById('angle-diff').textContent = `Δθ₁₂ = ${data.deltaTheta12.toFixed(0)}°`;
+            document.getElementById('angle-diff2').textContent = `Δθ₂₃ = ${data.deltaTheta23.toFixed(0)}°`;
+            
+            document.getElementById('pol1-visual').style.transform = `rotate(${data.theta1}deg)`;
+            document.getElementById('pol2-visual').style.transform = `rotate(${data.theta2}deg)`;
+            document.getElementById('pol3-visual').style.transform = `rotate(${data.theta3}deg)`;
+            
+            document.getElementById('pol1-angle').textContent = data.theta1.toFixed(0) + '°';
+            document.getElementById('pol2-angle').textContent = data.theta2.toFixed(0) + '°';
+            
+            const pol3Container = document.getElementById('pol3-container');
+            if (data.pol3Enabled) {
+                pol3Container.querySelector('.polarizer-visual').style.opacity = '1';
+                pol3Container.querySelector('p:nth-child(2)').className = 'text-sm font-bold text-gray-700';
+                pol3Container.querySelector('p:nth-child(3)').className = 'text-xs text-gray-500';
+                document.getElementById('pol3-angle').textContent = data.theta3.toFixed(0) + '°';
+            } else {
+                pol3Container.querySelector('.polarizer-visual').style.opacity = '0.3';
+                pol3Container.querySelector('p:nth-child(2)').className = 'text-sm font-bold text-gray-400';
+                pol3Container.querySelector('p:nth-child(3)').className = 'text-xs text-gray-400';
+                document.getElementById('pol3-angle').textContent = data.theta3.toFixed(0) + '° (Nonaktif)';
+            }
+            
+            if (data.Ifinal < 1) {
+                document.getElementById('status-text').textContent = '⛔ Hampir Extinct (I < 1%)';
+            } else if (data.Ifinal < 10) {
+                document.getElementById('status-text').textContent = '⚠️ Intensitas Sangat Rendah';
+            } else if (data.Ifinal < 50) {
+                document.getElementById('status-text').textContent = '✅ Polarisasi Parsial';
+            } else {
+                document.getElementById('status-text').textContent = '✅ Transmisi Tinggi';
+            }
+
+            if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function draw() {
+            const data = calculateIntensities();
+            
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, W, H);
+            
+            const positions = data.pol3Enabled ? [150, 400, 650] : [200, 600];
+            const centerY = H / 2;
+            
+            const amp0 = (data.I0 / 100) * 60;
+            drawWave(80, centerY, amp0, 90, '#ffffff', 0.8);
+            drawArrow(80, centerY - 80, data.theta1, 60, '#ff00ff', 'E₀');
+            
+            drawPolarizer(positions[0], centerY, data.theta1, 'P1');
+            
+            const amp1 = (data.I1 / 100) * 60;
+            const midX1 = data.pol3Enabled ? (positions[0] + positions[1]) / 2 : (positions[0] + positions[1]) / 2;
+            drawWave(midX1, centerY, amp1, 90 + data.theta1, '#ff00ff', data.I1 / 100);
+            drawArrow(midX1, centerY - 60, data.theta1, 50, '#ff00ff', 'E₁');
+            
+            drawPolarizer(positions[1], centerY, data.theta2, 'P2');
+            
+            const amp2 = (data.I2 / 100) * 60;
+            
+            if (data.pol3Enabled) {
+                const midX2 = (positions[1] + positions[2]) / 2;
+                drawWave(midX2, centerY, amp2, 90 + data.theta2, '#00ffff', data.I2 / 100);
+                drawArrow(midX2, centerY - 60, data.theta2, 50, '#00ffff', 'E₂');
+                
+                drawPolarizer(positions[2], centerY, data.theta3, 'P3');
+                
+                const amp3 = (data.I3 / 100) * 60;
+                drawWave(positions[2] + 80, centerY, amp3, 90 + data.theta3, '#00ff00', data.I3 / 100);
+                drawArrow(positions[2] + 80, centerY - 60, data.theta3, 50, '#00ff00', 'E₃');
+            } else {
+                const endX = positions[1] + 120;
+                drawWave(endX, centerY, amp2, 90 + data.theta2, '#00ff00', data.I2 / 100);
+                drawArrow(endX, centerY - 60, data.theta2, 50, '#00ff00', 'E_out');
+            }
+        }
+
+        function animate() {
+            animationFrame++;
+            draw();
+            updateDisplay();
+            requestAnimationFrame(animate);
+        }
+
+        function setPreset(type) {
+            if (type === 'crossed') {
+                sliders.angle1.value = 0;
+                sliders.angle2.value = 90;
+                checkboxes.pol3.checked = false;
+            } else if (type === 'parallel') {
+                sliders.angle1.value = 0;
+                sliders.angle2.value = 0;
+                checkboxes.pol3.checked = false;
+            } else if (type === 'brewster') {
+                sliders.angle1.value = 0;
+                sliders.angle2.value = 56.3;
+                checkboxes.pol3.checked = false;
+            } else if (type === 'triple') {
+                sliders.angle1.value = 0;
+                sliders.angle2.value = 45;
+                sliders.angle3.value = 90;
+                checkboxes.pol3.checked = true;
+            }
+            updateDisplay();
+        }
+
+        sliders.intensity.addEventListener('input', updateDisplay);
+        sliders.angle1.addEventListener('input', updateDisplay);
+        sliders.angle2.addEventListener('input', updateDisplay);
+        sliders.angle3.addEventListener('input', updateDisplay);
+        checkboxes.pol3.addEventListener('change', updateDisplay);
+        checkboxes.vectors.addEventListener('change', draw);
+        checkboxes.animate.addEventListener('change', (e) => {
+            animationEnabled = e.target.checked;
+        });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                updateDisplay();
+                animate();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

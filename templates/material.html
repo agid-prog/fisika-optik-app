@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Material | Optik Kuantitatif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .theme-blue {
+            background-color: #0099DD;
+        }
+        .text-theme-blue {
+            color: #0099DD;
+        }
+        .border-theme-blue {
+            border-color: #0099DD;
+        }
+        .hover\:bg-theme-blue-dark:hover {
+            background-color: #0077B3;
+        }
+        
+        .database-container {
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 153, 221, 0.3);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .header-section h1 {
+            color: white;
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header-section p {
+            color: #E0F4FF;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+        
+        .search-filter-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .search-box {
+            position: relative;
+            grid-column: 1 / -1;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 3px solid #0099DD;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0, 153, 221, 0.2);
+            border-color: #006BA6;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0099DD;
+            font-size: 1.2rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        
+        .filter-group select {
+            padding: 0.75rem;
+            border: 2px solid #0099DD;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-group select:focus {
+            outline: none;
+            border-color: #006BA6;
+            box-shadow: 0 0 0 3px rgba(0, 153, 221, 0.1);
+        }
+        
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            border-top: 4px solid #0099DD;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 153, 221, 0.2);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0099DD;
+            margin: 0.5rem 0;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .material-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .material-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #0099DD;
+            cursor: pointer;
+        }
+        
+        .material-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 153, 221, 0.3);
+            border-left-color: #006BA6;
+        }
+        
+        .material-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .material-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0099DD;
+            margin-bottom: 0.5rem;
+        }
+        
+        .material-index {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #333;
+            margin: 1rem 0;
+        }
+        
+        .material-index-label {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .material-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #E0F4FF;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .detail-label {
+            font-size: 0.75rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .detail-value {
+            font-size: 0.95rem;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .table-view {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        .material-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .material-table thead {
+            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
+        }
+        
+        .material-table th {
+            padding: 1.2rem;
+            text-align: left;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .material-table th:first-child {
+            border-top-left-radius: 10px;
+        }
+        
+        .material-table th:last-child {
+            border-top-right-radius: 10px;
+        }
+        
+        .material-table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #E0F4FF;
+        }
+        
+        .material-table tbody tr:hover {
+            background: #E0F4FF;
+            transform: scale(1.00);
+            box-shadow: 0 5px 15px rgba(0, 153, 221, 0.1);
+        }
+        
+        .material-table td {
+            padding: 1rem 1.2rem;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        
+        .index-highlight {
+            font-weight: 700;
+            color: #0099DD;
+            font-size: 1.1rem;
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .view-btn {
+            padding: 0.75rem 2rem;
+            border: 2px solid #0099DD;
+            background: white;
+            color: #0099DD;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .view-btn:hover {
+            background: #0099DD;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 153, 221, 0.3);
+        }
+        
+        .view-btn.active {
+            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
+            color: white;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .search-filter-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .material-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-section h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="p-0">
+
+    <nav class="theme-blue sticky top-0 z-50 shadow-xl mb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center h-14 space-x-2 md:space-x-4">
+                <a href="/" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Beranda</a>
+                <a href="/refleksi" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Simulasi Refleksi</a>
+                <a href="/pembiasaan" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Simulasi Pembiasan</a>
+                <a href="/polarisasi" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Simulasi Polarisasi</a>
+                <a href="/material" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Database Material</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="database-container max-w-7xl mx-auto">
+        <div class="header-section">
+            <h1>🔬 Database Material Optik</h1>
+            <p>Eksplorasi lengkap indeks bias (n) berbagai material untuk penelitian dan pembelajaran</p>
+        </div>
+        
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="totalMaterials">0</div>
+                <div class="stat-label">Total Material</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⬆️</div>
+                <div class="stat-value" id="maxIndex">--</div>
+                <div class="stat-label">Indeks Tertinggi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⬇️</div>
+                <div class="stat-value" id="minIndex">--</div>
+                <div class="stat-label">Indeks Terendah</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-value" id="avgIndex">--</div>
+                <div class="stat-label">Rata-rata</div>
+            </div>
+        </div>
+        
+        <div class="search-filter-section">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Cari material (contoh: kaca, air, berlian...)">
+            </div>
+            
+            <div class="filter-group">
+                <label>🔢 Urutkan Berdasarkan</label>
+                <select id="sortFilter">
+                    <option value="name-asc">Nama (A-Z)</option>
+                    <option value="name-desc">Nama (Z-A)</option>
+                    <option value="index-asc">Indeks Bias (Rendah-Tinggi)</option>
+                    <option value="index-desc">Indeks Bias (Tinggi-Rendah)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="view-toggle">
+            <button class="view-btn active" onclick="switchView('grid')">
+                📱 Tampilan Kartu
+            </button>
+            <button class="view-btn" onclick="switchView('table')">
+                📋 Tampilan Tabel
+            </button>
+        </div>
+        
+        <div class="material-grid" id="gridView">
+        </div>
+        
+        <div class="table-view" id="tableView" style="display: none;">
+            <table class="material-table">
+                <thead>
+                    <tr>
+                        <th>🔷 Material</th>
+                        <th>📊 Indeks Bias (n)</th>
+                        <th>⚡ Kecepatan Cahaya (v)</th>
+                        <th>🎯 Sudut Kritis (θc)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="no-results" id="noResults" style="display: none;">
+            <p>❌ Tidak ada material yang ditemukan</p>
+        </div>
+    </div>
+
+<script>
+    let materials = [
+        { nama: "Vakum", n: 1.0000 },
+        { nama: "Udara (Standar)", n: 1.0003 },
+        { nama: "Helium", n: 1.000036 },
+        { nama: "Karbon Dioksida", n: 1.00045 },
+        { nama: "Es", n: 1.309 },
+        { nama: "Air (Murni)", n: 1.333 },
+        { nama: "Air Laut", n: 1.34 },
+        { nama: "Etanol (Alkohol)", n: 1.361 },
+        { nama: "Gliserin", n: 1.473 },
+        { nama: "Minyak Zaitun", n: 1.47 },
+        { nama: "Bensin", n: 1.38 },
+        { nama: "Minyak Kelapa", n: 1.45 },
+        { nama: "Kuarsa Cair", n: 1.458 },
+        { nama: "Kuarsa Kristal", n: 1.544 },
+        { nama: "Plastik PMMA (Akrilik)", n: 1.49 },
+        { nama: "Plastik Polikarbonat", n: 1.585 },
+        { nama: "Plastik PET", n: 1.575 },
+        { nama: "Kaca Jendela", n: 1.52 },
+        { nama: "Kaca Crown", n: 1.52 },
+        { nama: "Kaca Borosilikat", n: 1.47 },
+        { nama: "Kaca Flint Ringan", n: 1.58 },
+        { nama: "Kaca Flint Berat", n: 1.66 },
+        { nama: "Kaca Flint Ekstra Berat", n: 1.89 },
+        { nama: "Kaca Optik", n: 1.50 },
+        { nama: "Kaca Lead (Timbal)", n: 1.80 },
+        { nama: "Lensa Mata", n: 1.386 },
+        { nama: "Kornea Mata", n: 1.376 },
+        { nama: "Kristal Mata (Lens)", n: 1.41 },
+        { nama: "Safir", n: 1.77 },
+        { nama: "Topaz", n: 1.61 },
+        { nama: "Emerald", n: 1.57 },
+        { nama: "Ruby", n: 1.76 },
+        { nama: "Berlian", n: 2.417 },
+        { nama: "Zirkon", n: 1.92 },
+        { nama: "Kristal Kuarsa", n: 1.544 },
+        { nama: "Kalsit", n: 1.486 },
+        { nama: "Garam (NaCl)", n: 1.544 },
+        { nama: "Fluorit (CaF2)", n: 1.434 },
+        { nama: "Silikon", n: 3.45 },
+        { nama: "Germanium", n: 4.00 },
+        { nama: "Serat Optik (Core)", n: 1.46 },
+        { nama: "Serat Optik (Cladding)", n: 1.42 }
+    ];
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        calculateAndDisplayStats();
+        renderMaterials();
+
+        document.getElementById('searchInput').addEventListener('input', filterAndSortMaterials);
+        document.getElementById('sortFilter').addEventListener('change', filterAndSortMaterials);
+    });
+    
+    function calculateSpeed(n) {
+        const c = 299792458;
+        const speed = c / n / 1000000;
+        return speed.toFixed(2) + ' × 10⁶ m/s';
+    }
+    
+    function calculateCriticalAngle(n) {
+        const n_air = 1.0003;
+        if (n <= n_air) return 'N/A';
+        
+        const sinCritical = n_air / n;
+        if (sinCritical > 1) return 'N/A';
+        
+        const criticalRad = Math.asin(sinCritical);
+        const criticalDeg = criticalRad * (180 / Math.PI);
+        return criticalDeg.toFixed(2) + '°';
+    }
+
+    function calculateAndDisplayStats() {
+        if (materials.length === 0) return;
+        
+        const indices = materials.map(m => parseFloat(m.n));
+        const total = indices.length;
+        const max = Math.max(...indices).toFixed(4);
+        const min = Math.min(...indices).toFixed(4);
+        const avg = (indices.reduce((a, b) => a + b) / total).toFixed(4);
+        
+        document.getElementById('totalMaterials').textContent = total;
+        document.getElementById('maxIndex').textContent = max;
+        document.getElementById('minIndex').textContent = min;
+        document.getElementById('avgIndex').textContent = avg;
+    }
+    
+    function renderMaterials(filteredMaterials = materials) {
+        const gridContainer = document.getElementById('gridView');
+        const tableBody = document.getElementById('tableBody');
+        
+        gridContainer.innerHTML = '';
+        tableBody.innerHTML = '';
+
+        if (filteredMaterials.length === 0) {
+            document.getElementById('noResults').style.display = 'block';
+            return;
+        }
+        
+        document.getElementById('noResults').style.display = 'none';
+
+        filteredMaterials.forEach(m => {
+            const speed = calculateSpeed(m.n);
+            const critical = calculateCriticalAngle(m.n);
+            
+            const cardHtml = `
+                <div class="material-card" data-name="${m.nama}" data-index="${m.n}">
+                    <span class="material-icon">🔷</span>
+                    <div class="material-name">${m.nama}</div>
+                    <div class="material-index-label">Indeks Bias (n)</div>
+                    <div class="material-index">${m.n}</div>
+                    
+                    <div class="material-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Kecepatan</span>
+                            <span class="detail-value">${speed}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Sudut Kritis</span>
+                            <span class="detail-value">${critical}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            gridContainer.innerHTML += cardHtml;
+
+            const rowHtml = `
+                <tr data-name="${m.nama}" data-index="${m.n}">
+                    <td><strong>🔷 ${m.nama}</strong></td>
+                    <td><span class="index-highlight">${m.n}</span></td>
+                    <td>${speed}</td>
+                    <td>${critical}</td>
+                </tr>
+            `;
+            tableBody.innerHTML += rowHtml;
+        });
+    }
+    
+    function filterAndSortMaterials() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const sortValue = document.getElementById('sortFilter').value;
+        
+        let filtered = materials.filter(m => m.nama.toLowerCase().includes(searchTerm));
+        
+        const sortFn = (a, b) => {
+            const nameA = a.nama.toLowerCase();
+            const nameB = b.nama.toLowerCase();
+            const indexA = parseFloat(a.n);
+            const indexB = parseFloat(b.n);
+            
+            switch(sortValue) {
+                case 'name-asc': return nameA.localeCompare(nameB);
+                case 'name-desc': return nameB.localeCompare(nameA);
+                case 'index-asc': return indexA - indexB;
+                case 'index-desc': return indexB - indexA;
+                default: return 0;
+            }
+        };
+        
+        filtered.sort(sortFn);
+
+        renderMaterials(filtered);
+    }
+    
+    function switchView(view) {
+        const gridView = document.getElementById('gridView');
+        const tableView = document.getElementById('tableView');
+        const buttons = document.querySelectorAll('.view-btn');
+        
+        buttons.forEach(btn => btn.classList.remove('active'));
+        
+        if (view === 'grid') {
+            gridView.style.display = 'grid';
+            tableView.style.display = 'none';
+            document.querySelector('.view-btn:nth-child(1)').classList.add('active');
+        } else {
+            gridView.style.display = 'none';
+            tableView.style.display = 'block';
+            document.querySelector('.view-btn:nth-child(2)').classList.add('active');
+        }
+    }
+</script>
+</body>
+</html>
