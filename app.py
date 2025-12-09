@@ -3,7 +3,7 @@ from flask import Flask, render_template, request
 import math
 
 # Inisialisasi Aplikasi Flask
-# Perhatikan: Nama variabel aplikasi HARUS "app" agar Gunicorn bisa menemukannya
+# Nama variabel aplikasi HARUS "app" agar Gunicorn bisa menemukannya
 app = Flask(__name__)
 
 # Database sederhana material (digunakan oleh route /material)
@@ -25,7 +25,7 @@ def index():
 def refleksi():
     return render_template("refleksi.html", title="Simulasi Refleksi")
 
-# Route untuk Pembiasan (pembiasaan.html) dengan logika POST
+# Route untuk Pembiasan (pembiasaan.html) dengan logika POST (Hukum Snellius)
 @app.route("/pembiasaan", methods=["GET", "POST"])
 def pembiasaan():
     hasil = None
@@ -70,5 +70,4 @@ def material():
 
 # Bagian ini hanya untuk testing LOKAL
 if __name__ == "__main__":
-    # Menggunakan port dari environment jika ada, jika tidak, default 5000
     app.run(host='0.0.0.0', port=os.environ.get('PORT', 5000), debug=True)
