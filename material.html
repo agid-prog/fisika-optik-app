@@ -470,17 +470,51 @@
     </div>
 
 <script>
-    // Data materials PLACEHOLDER (Mengganti {{ materials|tojson }})
-    let materials = [
-        { nama: "Udara (Standar)", n: 1.0003 },
-        { nama: "Air (Murni)", n: 1.333 },
-        { nama: "Es", n: 1.309 },
-        { nama: "Kaca (Crown)", n: 1.52 },
-        { nama: "Kaca (Flint)", n: 1.66 },
-        { nama: "Minyak Zaitun", n: 1.47 },
-        { nama: "Berlian", n: 2.417 },
-        { nama: "Kuarsa", n: 1.46 },
-    ];
+/* =========================
+   MATERIAL DATABASE (EXTENDED)
+========================= */
+let materials = [
+    // === GAS ===
+    { nama: "Vakum", n: 1.0, kategori: "gas", icon: "🪐" },
+    { nama: "Udara (STP)", n: 1.000293, kategori: "gas", icon: "🌫️" },
+    { nama: "Oksigen", n: 1.000271, kategori: "gas", icon: "🧪" },
+    { nama: "Nitrogen", n: 1.000298, kategori: "gas", icon: "🧪" },
+    { nama: "Karbon Dioksida", n: 1.00045, kategori: "gas", icon: "🌬️" },
+
+    // === CAIRAN ===
+    { nama: "Air (Murni)", n: 1.333, kategori: "cairan", icon: "💧" },
+    { nama: "Air Laut", n: 1.339, kategori: "cairan", icon: "🌊" },
+    { nama: "Etanol", n: 1.361, kategori: "cairan", icon: "🍺" },
+    { nama: "Metanol", n: 1.329, kategori: "cairan", icon: "🧪" },
+    { nama: "Gliserin", n: 1.473, kategori: "cairan", icon: "🧴" },
+    { nama: "Minyak Zaitun", n: 1.47, kategori: "cairan", icon: "🫒" },
+
+    // === KACA ===
+    { nama: "Kaca Crown (BK7)", n: 1.517, kategori: "kaca", icon: "🪟" },
+    { nama: "Kaca Flint", n: 1.66, kategori: "kaca", icon: "🪟" },
+    { nama: "Fused Silica", n: 1.458, kategori: "kaca", icon: "🧪" },
+    { nama: "Pyrex", n: 1.474, kategori: "kaca", icon: "🧪" },
+    { nama: "Safir Sintetis", n: 1.77, kategori: "kaca", icon: "💎" },
+
+    // === KRISTAL ===
+    { nama: "Berlian", n: 2.417, kategori: "kristal", icon: "💎" },
+    { nama: "Moissanite", n: 2.65, kategori: "kristal", icon: "✨" },
+    { nama: "Zirkon", n: 1.92, kategori: "kristal", icon: "💎" },
+    { nama: "Kuarsa (SiO₂)", n: 1.544, kategori: "kristal", icon: "🔮" },
+    { nama: "Ruby", n: 1.76, kategori: "kristal", icon: "❤️" },
+
+    // === POLIMER ===
+    { nama: "Acrylic (PMMA)", n: 1.49, kategori: "polimer", icon: "🧊" },
+    { nama: "Polycarbonate", n: 1.586, kategori: "polimer", icon: "🛡️" },
+    { nama: "Nylon", n: 1.53, kategori: "polimer", icon: "🧵" },
+    { nama: "Teflon (PTFE)", n: 1.35, kategori: "polimer", icon: "🍳" },
+
+    // === LAINNYA ===
+    { nama: "Es", n: 1.309, kategori: "lainnya", icon: "🧊" },
+    { nama: "Kayu", n: 1.40, kategori: "lainnya", icon: "🪵" },
+    { nama: "Kertas", n: 1.47, kategori: "lainnya", icon: "📄" },
+];
+
     
     document.addEventListener('DOMContentLoaded', () => {
         // Init rendering and calculations
