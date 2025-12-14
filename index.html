@@ -10,37 +10,25 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #E0F4FF 0%, #ffffff 100%);
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #ffffff 100%);
+            min-height: 100vh;
         }
         
         .theme-blue {
-            background-color: #0099DD;
+            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
         }
         
         .hover\:bg-theme-blue-dark:hover {
-            background-color: #0077B3;
+            background-color: rgba(0, 0, 0, 0.1);
         }
         
         .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .card-hover:hover {
-            transform: translateY(-12px) scale(1.03);
-            box-shadow: 0 25px 50px rgba(0, 153, 221, 0.3);
-        }
-        
-        .feature-icon {
-            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 20px;
-            font-size: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 153, 221, 0.3);
-            margin: 0 auto 1.5rem;
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0, 153, 221, 0.25);
         }
         
         .gradient-text {
@@ -51,40 +39,132 @@
         }
         
         .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 153, 221, 0.2);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 153, 221, 0.15);
         }
         
         .stat-number {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 900;
             background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            line-height: 1;
         }
         
         .benefit-card {
             background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border-left: 5px solid #0099DD;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-top: 4px solid #0099DD;
             height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #0099DD 0%, #00d4ff 100%);
         }
         
         .cta-button {
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .cta-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 153, 221, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 153, 221, 0.4);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 24px rgba(0, 153, 221, 0.25);
+        }
+        
+        .academic-highlight {
+            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 153, 221, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .academic-highlight::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .dosen-name {
+            font-size: 2rem;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: -0.5px;
+        }
+        
+        .info-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 1rem;
         }
         
         @media (max-width: 768px) {
             .stat-number {
-                font-size: 2rem;
+                font-size: 2.5rem;
+            }
+            .dosen-name {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -100,209 +180,245 @@
 </head>
 <body class="p-0">
 
-    <!-- Navbar PERSIS SEPERTI SEMULA -->
+     <!-- Navbar PERSIS SEPERTI SEMULA -->
     <nav class="theme-blue sticky top-0 z-50 shadow-xl mb-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center h-14 space-x-2 md:space-x-4">
                     <a href="index.html" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-bold hover:bg-theme-blue-dark transition duration-150">Beranda</a>
                 <a href="refleksi.html" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Simulasi Refleksi</a>
                 <a href="pembiasaan.html" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Simulasi Pembiasan</a>
+                <a href="polarisasi.html" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Simulasi Polarisasi</a>
                 <a href="material.html" class="text-white px-2 py-1 rounded-md text-sm md:text-base font-medium hover:bg-theme-blue-dark transition duration-150">Database Material</a>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-6xl mx-auto px-4 pb-12">
+    <div class="max-w-7xl mx-auto px-4 pb-16">
         
         <!-- Header Utama -->
-        <header class="text-center mb-12 mt-8">
-            <h1 class="text-5xl md:text-6xl font-extrabold text-gray-800 leading-tight mb-4">
-                Simulasi Interaksi Cahaya dan Material
+        <header class="text-center mb-16 mt-12">
+            <div class="mb-6">
+                <span class="inline-block bg-blue-100 text-blue-800 px-6 py-2 rounded-full text-sm font-bold tracking-wide">PLATFORM PEMBELAJARAN OPTIK</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black text-gray-900 leading-tight mb-6">
+                Simulasi Interaksi Cahaya<br>dan Material
             </h1>
-            <p class="text-xl md:text-2xl text-gray-700 font-semibold mb-8">
-                Eksplorasi Fenomena Optik Kuantitatif: Pembiasan, Refleksi, dan Polarisasi
+            <p class="text-xl md:text-2xl text-gray-700 font-medium mb-12 max-w-4xl mx-auto leading-relaxed">
+                Eksplorasi Fenomena Optik Kuantitatif Melalui Visualisasi Interaktif:<br>Pembiasan, Refleksi, dan Polarisasi Cahaya
             </p>
             
-            <!-- 3 TOMBOL CTA LENGKAP -->
-            <div class="flex flex-wrap justify-center gap-4 mb-8">
-                <a href="refleksi.html" class="cta-button bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:from-purple-600 hover:to-purple-700">
-                    🪞 Simulasi Refleksi
+            <!-- CTA Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <a href="refleksi.html" class="cta-button bg-gradient-to-r from-purple-600 to-purple-700 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl">
+                    Simulasi Refleksi
                 </a>
-                <a href="pembiasaan.html" class="cta-button bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:from-blue-600 hover:to-blue-700">
-                    🌈 Simulasi Pembiasan
+                <a href="pembiasaan.html" class="cta-button bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl">
+                    Simulasi Pembiasan
                 </a>
-                <a href="polarisasi.html" class="cta-button bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:from-blue-600 hover:to-blue-700">
-                    🌈 Simulasi Polarisasi
+                <a href="polarisasi.html" class="cta-button bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl">
+                    Simulasi Polarisasi
                 </a>
-                <a href="material.html" class="cta-button bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl hover:from-green-600 hover:to-green-700">
-                    📊 Database Material
+                <a href="material.html" class="cta-button bg-gradient-to-r from-green-600 to-emerald-600 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl">
+                    Database Material
                 </a>
             </div>
         </header>
 
-        <!-- Info Pembuat - Card Modern -->
-        <div class="glass-effect rounded-3xl shadow-2xl p-8 md:p-12 mb-12">
-            <div class="grid md:grid-cols-2 gap-8 items-center">
-                <div class="text-center md:text-left">
-                    <div class="inline-block bg-gradient-to-r from-blue-500 to-cyan-500 p-1 rounded-2xl mb-4">
-                        <div class="bg-white px-6 py-2 rounded-xl">
-                            <span class="text-2xl font-black gradient-text">👨‍🎓 Profil Pengembang</span>
+        <!-- Konteks Akademik - HIGHLIGHTED SECTION -->
+        <div class="academic-highlight mb-16 relative z-10">
+            <div class="relative z-10">
+                <div class="text-center mb-8">
+                    <div class="info-badge text-xl font-bold mb-4">
+                        MATA KULIAH PERMODELAN DAN ANIMASI
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-black mb-2">Universitas Andalas</h2>
+                    <p class="text-blue-100 text-lg font-medium">Fakultas Matematika dan Ilmu Pengetahuan Alam</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+                        <div class="text-sm font-bold text-blue-200 mb-3 tracking-wider">DOSEN PENGAMPU</div>
+                        <div class="dosen-name mb-4">
+                            Dr.rer.nat. Muldarisnur, S.Pd, M.Si
+                        </div>
+                        <div class="text-blue-100 font-medium">
+                            Program Studi Fisika<br>
+                            Departemen Fisika FMIPA UNAND
                         </div>
                     </div>
-                    <h2 class="text-4xl md:text-5xl font-black text-gray-800 mb-2">Agid Al Syah Putra</h2>
-                    <p class="text-xl text-gray-600 font-semibold mb-4">Mahasiswa Fisika</p>
-                    <div class="flex items-center justify-center md:justify-start space-x-2 text-blue-600">
-                        <span class="text-2xl">🎓</span>
-                        <span class="font-bold text-lg">Universitas Andalas (UNAND)</span>
+                    
+                    <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+                        <div class="text-sm font-bold text-blue-200 mb-3 tracking-wider">PENGEMBANG SISTEM</div>
+                        <div class="text-3xl font-black mb-4">
+                            Agid Al Syah Putra
+                        </div>
+                        <div class="text-blue-100 font-medium">
+                            Mahasiswa Program Studi Fisika<br>
+                            Universitas Andalas
+                        </div>
                     </div>
                 </div>
                 
-                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border-l-4 border-blue-600">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">📚 Konteks Akademik</h3>
-                    <p class="text-gray-700 font-medium mb-3">
-                        <strong>Mata Kuliah:</strong> Permodelan dan Animasi
-                    </p>
-                    <p class="text-gray-700 font-medium mb-3">
-                        <strong>Dosen Pengampu:</strong> Dr.rer.nat. Muldarisnur, S.Pd, M.Si
-                    </p>
-                    <p class="text-gray-700 font-medium mb-3">
-                        <strong>Materi:</strong> Material & Properti Optik
-                    </p>
-                    <p class="text-sm text-gray-600 italic bg-white rounded-lg p-3">
-                        💡 Proyek ini mengintegrasikan visualisasi optik interaktif dengan sistem manajemen database material yang dinamis, menerapkan konsep fisika komputasi modern.
+                <div class="mt-8 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
+                    <div class="text-sm font-bold text-blue-200 mb-3 tracking-wider">DESKRIPSI PROYEK</div>
+                    <p class="text-white text-lg leading-relaxed">
+                        Proyek ini merupakan implementasi komprehensif dari materi <strong>Material dan Properti Optik</strong>, mengintegrasikan visualisasi interaktif fenomena pembiasan, refleksi, dan polarisasi cahaya dengan sistem manajemen database material berbasis web. Platform ini menerapkan prinsip-prinsip fisika komputasi modern untuk mendukung pembelajaran optik yang lebih intuitif dan kuantitatif.
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- Statistik Singkat -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-            <div class="text-center bg-white rounded-2xl p-6 shadow-lg card-hover">
-                <div class="stat-number">2</div>
-                <p class="text-gray-600 font-bold">Simulasi</p>
+        <!-- Statistik -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+            <div class="text-center bg-white rounded-3xl p-8 shadow-lg card-hover">
+                <div class="stat-number mb-2">3</div>
+                <p class="text-gray-700 font-bold text-lg">Simulasi Interaktif</p>
             </div>
-            <div class="text-center bg-white rounded-2xl p-6 shadow-lg card-hover">
-                <div class="stat-number">15+</div>
-                <p class="text-gray-600 font-bold">Material</p>
+            <div class="text-center bg-white rounded-3xl p-8 shadow-lg card-hover">
+                <div class="stat-number mb-2">28</div>
+                <p class="text-gray-700 font-bold text-lg">Material Optik</p>
             </div>
-            <div class="text-center bg-white rounded-2xl p-6 shadow-lg card-hover">
-                <div class="stat-number">∞</div>
-                <p class="text-gray-600 font-bold">Eksperimen</p>
+            <div class="text-center bg-white rounded-3xl p-8 shadow-lg card-hover">
+                <div class="stat-number mb-2">∞</div>
+                <p class="text-gray-700 font-bold text-lg">Konfigurasi Eksperimen</p>
             </div>
-            <div class="text-center bg-white rounded-2xl p-6 shadow-lg card-hover">
-                <div class="stat-number">100%</div>
-                <p class="text-gray-600 font-bold">Akurat</p>
+            <div class="text-center bg-white rounded-3xl p-8 shadow-lg card-hover">
+                <div class="stat-number mb-2">100%</div>
+                <p class="text-gray-700 font-bold text-lg">Akurasi Fisika</p>
             </div>
         </div>
 
-        <!-- Manfaat Utama - SUPER DETAIL -->
-        <div class="mb-12">
+        <!-- Manfaat Utama -->
+        <div class="mb-16">
             <div class="text-center mb-12">
                 <h2 class="text-4xl md:text-5xl font-black gradient-text mb-4">
-                    🎯 Manfaat & Kegunaan Utama
+                    Manfaat dan Kegunaan Utama
                 </h2>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    Platform pembelajaran optik yang komprehensif untuk memahami interaksi cahaya dengan berbagai material
+                    Platform pembelajaran optik komprehensif untuk memahami interaksi cahaya dengan berbagai material
                 </p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
-                <!-- Manfaat 1 -->
                 <div class="benefit-card card-hover">
                     <div class="feature-icon">
                         <span>📐</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Validasi Hukum Snellius</h3>
-                    <div class="space-y-3 text-gray-700">
-                        <p class="font-semibold text-blue-600">🔬 Perhitungan Real-Time</p>
-                        <p>Hitung sudut bias ($\theta_2$) secara instan menggunakan formula: $$n_1 \sin\theta_1 = n_2 \sin\theta_2$$</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Validasi Hukum Snellius</h3>
+                    <div class="space-y-4 text-gray-700 leading-relaxed">
+                        <div>
+                            <p class="font-bold text-blue-700 mb-1">Perhitungan Real-Time</p>
+                            <p>Hitung sudut bias secara instan menggunakan formula: $$n_1 \sin\theta_1 = n_2 \sin\theta_2$$</p>
+                        </div>
                         
-                        <p class="font-semibold text-blue-600">📊 Analisis Hubungan</p>
-                        <p>Pelajari hubungan invers antara indeks bias ($n$) dan besar sudut pembiasan dengan visualisasi interaktif.</p>
+                        <div>
+                            <p class="font-bold text-blue-700 mb-1">Analisis Hubungan</p>
+                            <p>Pelajari korelasi antara indeks bias dan sudut pembiasan dengan visualisasi interaktif yang responsif.</p>
+                        </div>
                         
-                        <p class="font-semibold text-blue-600">✅ Verifikasi Eksperimen</p>
-                        <p>Bandingkan hasil simulasi dengan data eksperimen untuk validasi konsep fisika.</p>
+                        <div>
+                            <p class="font-bold text-blue-700 mb-1">Verifikasi Eksperimen</p>
+                            <p>Bandingkan hasil simulasi dengan data eksperimen untuk validasi konsep fisika teoritis.</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Manfaat 2 -->
                 <div class="benefit-card card-hover">
                     <div class="feature-icon">
-                        <span>🌟</span>
+                        <span>🔬</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Eksplorasi Sudut Kritis & TIR</h3>
-                    <div class="space-y-3 text-gray-700">
-                        <p class="font-semibold text-blue-600">🎯 Sudut Kritis Otomatis</p>
-                        <p>Hitung sudut kritis secara otomatis: $$\theta_c = \arcsin\left(\frac{n_2}{n_1}\right)$$ (hanya saat $n_1 > n_2$)</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Eksplorasi Sudut Kritis & TIR</h3>
+                    <div class="space-y-4 text-gray-700 leading-relaxed">
+                        <div>
+                            <p class="font-bold text-blue-700 mb-1">Sudut Kritis Otomatis</p>
+                            <p>Kalkulasi sudut kritis: $$\theta_c = \arcsin\left(\frac{n_2}{n_1}\right)$$ untuk kondisi $n_1 > n_2$</p>
+                        </div>
                         
-                        <p class="font-semibold text-blue-600">💥 Fenomena TIR</p>
-                        <p>Visualisasi Refleksi Internal Total (TIR) yang terjadi saat $\theta_1 > \theta_c$ dengan indikator visual jelas.</p>
+                        <div>
+                            <p class="font-bold text-blue-700 mb-1">Fenomena TIR</p>
+                            <p>Visualisasi Refleksi Internal Total yang terjadi saat $\theta_1 > \theta_c$ dengan indikator visual dinamis.</p>
+                        </div>
                         
-                        <p class="font-semibold text-blue-600">🔭 Aplikasi Praktis</p>
-                        <p>Pahami aplikasi TIR dalam fiber optik, prisma, dan instrumen optik lainnya.</p>
+                        <div>
+                            <p class="font-bold text-blue-700 mb-1">Aplikasi Praktis</p>
+                            <p>Memahami penerapan TIR dalam fiber optik, prisma, dan instrumen optik modern.</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Manfaat 3 -->
                 <div class="benefit-card card-hover">
                     <div class="feature-icon">
-                        <span>✨</span>
+                        <span>💡</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Memahami Sudut Brewster</h3>
-                    <div class="space-y-3 text-gray-700">
-                        <p class="font-semibold text-blue-600">📐 Kalkulasi Brewster</p>
-                        <p>Hitung Sudut Brewster: $$\theta_B = \arctan\left(\frac{n_2}{n_1}\right)$$ untuk setiap pasangan material.</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Memahami Sudut Brewster</h3>
+                    <div class="space-y-4 text-gray-700 leading-relaxed">
+                        <div>
+                            <p class="font-bold text-blue-700 mb-1">Kalkulasi Brewster</p>
+                            <p>Hitung Sudut Brewster: $$\theta_B = \arctan\left(\frac{n_2}{n_1}\right)$$ untuk setiap kombinasi material.</p>
+                        </div>
                         
-                        <p class="font-semibold text-blue-600">🌈 Polarisasi Sempurna</p>
-                        <p>Pelajari kondisi di mana cahaya pantul terpolarisasi 100% (tanpa komponen p-polarisasi).</p>
+                        <div>
+                            <p class="font-bold text-blue-700 mb-1">Polarisasi Sempurna</p>
+                            <p>Analisis kondisi polarisasi cahaya pantul 100% tanpa komponen p-polarisasi.</p>
+                        </div>
                         
-                        <p class="font-semibold text-blue-600">🔬 Optik Terapan</p>
-                        <p>Aplikasi dalam kacamata polarisasi, filter kamera, dan teknologi display modern.</p>
+                        <div>
+                            <p class="font-bold text-blue-700 mb-1">Optik Terapan</p>
+                            <p>Aplikasi dalam kacamata polarisasi, filter kamera, dan teknologi display LCD.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Fitur Tambahan -->
-        <div class="mb-12">
-            <h2 class="text-4xl font-black gradient-text text-center mb-10">⚡ Fitur Unggulan Lainnya</h2>
+        <div class="mb-16">
+            <h2 class="text-4xl font-black gradient-text text-center mb-12">Fitur Unggulan Platform</h2>
             <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-2xl p-6 shadow-lg border-t-4 border-blue-500 card-hover">
+                <div class="bg-white rounded-3xl p-8 shadow-lg border-l-4 border-blue-600 card-hover">
                     <div class="flex items-start space-x-4">
-                        <span class="text-4xl">🗄️</span>
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center text-white text-3xl flex-shrink-0">
+                            🗄️
+                        </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">Database Material Dinamis</h3>
-                            <p class="text-gray-600">Kelola database dengan kemampuan <strong>CRUD lengkap</strong> (Create, Read, Update, Delete). Tambahkan material custom dengan indeks bias spesifik untuk penelitian Anda.</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Database Material Dinamis</h3>
+                            <p class="text-gray-700 leading-relaxed">Sistem CRUD lengkap (Create, Read, Update, Delete) untuk manajemen database material. Tambahkan material kustom dengan indeks bias spesifik untuk keperluan penelitian dan eksperimen.</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-2xl p-6 shadow-lg border-t-4 border-green-500 card-hover">
+                <div class="bg-white rounded-3xl p-8 shadow-lg border-l-4 border-green-600 card-hover">
                     <div class="flex items-start space-x-4">
-                        <span class="text-4xl">📱</span>
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-700 rounded-2xl flex items-center justify-center text-white text-3xl flex-shrink-0">
+                            📱
+                        </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">Responsive & Mobile-Friendly</h3>
-                            <p class="text-gray-600">Akses simulasi dari <strong>perangkat apapun</strong>. Desain responsif memastikan pengalaman optimal di desktop, tablet, dan smartphone.</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Responsive Design</h3>
+                            <p class="text-gray-700 leading-relaxed">Desain responsif penuh memastikan pengalaman optimal di semua perangkat: desktop, tablet, dan smartphone dengan antarmuka yang adaptif.</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-2xl p-6 shadow-lg border-t-4 border-purple-500 card-hover">
+                <div class="bg-white rounded-3xl p-8 shadow-lg border-l-4 border-purple-600 card-hover">
                     <div class="flex items-start space-x-4">
-                        <span class="text-4xl">⚡</span>
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center text-white text-3xl flex-shrink-0">
+                            ⚡
+                        </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">Visualisasi Real-Time</h3>
-                            <p class="text-gray-600">Lihat perubahan <strong>secara instan</strong> saat Anda menggeser slider. Animasi smooth dengan HTML5 Canvas untuk pembelajaran visual yang efektif.</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Visualisasi Real-Time</h3>
+                            <p class="text-gray-700 leading-relaxed">Rendering instan menggunakan HTML5 Canvas dengan animasi smooth. Perubahan parameter langsung tervisualisasi untuk pembelajaran yang efektif.</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-2xl p-6 shadow-lg border-t-4 border-red-500 card-hover">
+                <div class="bg-white rounded-3xl p-8 shadow-lg border-l-4 border-red-600 card-hover">
                     <div class="flex items-start space-x-4">
-                        <span class="text-4xl">🎓</span>
+                        <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-2xl flex items-center justify-center text-white text-3xl flex-shrink-0">
+                            🎓
+                        </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">Untuk Pendidikan</h3>
-                            <p class="text-gray-600">Cocok untuk <strong>mahasiswa, dosen, dan peneliti</strong>. Semua formula ditampilkan dengan notasi matematika LaTeX yang profesional.</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Platform Edukasi</h3>
+                            <p class="text-gray-700 leading-relaxed">Dirancang khusus untuk mahasiswa, dosen, dan peneliti. Formula matematika ditampilkan dengan notasi LaTeX profesional untuk akurasi akademis.</p>
                         </div>
                     </div>
                 </div>
@@ -310,46 +426,53 @@
         </div>
 
         <!-- Panduan Penggunaan -->
-        <div class="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl p-8 md:p-12 text-white shadow-2xl mb-12">
-            <h2 class="text-4xl font-black text-center mb-10">📖 Panduan Cepat Penggunaan</h2>
+        <div class="bg-gradient-to-br from-blue-700 via-blue-600 to-cyan-600 rounded-3xl p-10 md:p-14 text-white shadow-2xl mb-16">
+            <h2 class="text-4xl md:text-5xl font-black text-center mb-12">Panduan Penggunaan Platform</h2>
             <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white bg-opacity-10 rounded-2xl p-6 backdrop-blur">
-                    <div class="text-5xl mb-4">1️⃣</div>
+                <div class="bg-white bg-opacity-15 rounded-3xl p-8 backdrop-blur-lg border border-white border-opacity-20">
+                    <div class="text-6xl font-black mb-4 text-blue-200">01</div>
                     <h3 class="text-2xl font-bold mb-3">Kelola Database Material</h3>
-                    <p class="text-blue-100">Tambah, edit, atau hapus material dengan nilai indeks bias ($n$) spesifik. Data tersimpan real-time menggunakan teknologi cloud.</p>
+                    <p class="text-blue-100 leading-relaxed">Tambah, edit, atau hapus material dengan nilai indeks bias spesifik. Sistem penyimpanan cloud memastikan data tersimpan secara real-time dan persistent.</p>
                 </div>
                 
-                <div class="bg-white bg-opacity-10 rounded-2xl p-6 backdrop-blur">
-                    <div class="text-5xl mb-4">2️⃣</div>
-                    <h3 class="text-2xl font-bold mb-3">Pilih Medium</h3>
-                    <p class="text-blue-100">Pilih Medium 1 ($n_1$) dan Medium 2 ($n_2$) dari dropdown. Kombinasi berbeda menghasilkan fenomena optik yang beragam.</p>
+                <div class="bg-white bg-opacity-15 rounded-3xl p-8 backdrop-blur-lg border border-white border-opacity-20">
+                    <div class="text-6xl font-black mb-4 text-blue-200">02</div>
+                    <h3 class="text-2xl font-bold mb-3">Pilih Medium Optik</h3>
+                    <p class="text-blue-100 leading-relaxed">Pilih Medium 1 dan Medium 2 dari dropdown material. Kombinasi berbeda menghasilkan fenomena optik yang beragam untuk dianalisis.</p>
                 </div>
                 
-                <div class="bg-white bg-opacity-10 rounded-2xl p-6 backdrop-blur">
-                    <div class="text-5xl mb-4">3️⃣</div>
-                    <h3 class="text-2xl font-bold mb-3">Atur Sudut Datang</h3>
-                    <p class="text-blue-100">Geser slider $\theta_1$ dari 0° hingga 90°. Amati perubahan real-time pada sudut bias, sudut kritis, dan kondisi TIR.</p>
+                <div class="bg-white bg-opacity-15 rounded-3xl p-8 backdrop-blur-lg border border-white border-opacity-20">
+                    <div class="text-6xl font-black mb-4 text-blue-200">03</div>
+                    <h3 class="text-2xl font-bold mb-3">Atur Parameter Sudut</h3>
+                    <p class="text-blue-100 leading-relaxed">Geser slider sudut datang dari 0° hingga 90°. Amati perubahan real-time pada sudut bias, sudut kritis, dan kondisi refleksi internal total.</p>
                 </div>
                 
-                <div class="bg-white bg-opacity-10 rounded-2xl p-6 backdrop-blur">
-                    <div class="text-5xl mb-4">4️⃣</div>
-                    <h3 class="text-2xl font-bold mb-3">Analisis Hasil</h3>
-                    <p class="text-blue-100">Pelajari output numerik ($\theta_2$, $\theta_c$, $\theta_B$) dan visualisasi grafis untuk pemahaman mendalam tentang perilaku cahaya.</p>
+                <div class="bg-white bg-opacity-15 rounded-3xl p-8 backdrop-blur-lg border border-white border-opacity-20">
+                    <div class="text-6xl font-black mb-4 text-blue-200">04</div>
+                    <h3 class="text-2xl font-bold mb-3">Analisis Hasil Eksperimen</h3>
+                    <p class="text-blue-100 leading-relaxed">Pelajari output numerik dan visualisasi grafis untuk pemahaman mendalam tentang perilaku propagasi cahaya dalam berbagai media.</p>
                 </div>
             </div>
         </div>
 
         <!-- Footer -->
-        <footer class="text-center py-8 border-t-2 border-gray-200">
-            <p class="text-gray-600 mb-2 font-semibold">
-                Simulasi Interaksi Cahaya dan Material 
-            </p>
-            <p class="text-sm text-gray-500">
-                Dibuat untuk pendidikan fisika | Powered by HTML5 Canvas & Modern Web Technologies
-            </p>
-            <p class="text-xs text-gray-400 mt-2">
-                © 2025 Agid Al Syah Putra - Universitas Andalas
-            </p>
+        <footer class="text-center py-10 border-t-2 border-gray-300">
+            <div class="mb-4">
+                <h3 class="text-2xl font-black gradient-text mb-2">
+                    Simulasi Interaksi Cahaya dan Material
+                </h3>
+                <p class="text-gray-600 font-medium mb-1">
+                    Platform Pembelajaran Optik Berbasis Web
+                </p>
+                <p class="text-sm text-gray-500">
+                    Powered by HTML5 Canvas & Modern Web Technologies
+                </p>
+            </div>
+            <div class="text-sm text-gray-500 space-y-1">
+                <p>Mata Kuliah: Permodelan dan Animasi</p>
+                <p>Dosen: Dr.rer.nat. Muldarisnur, S.Pd, M.Si</p>
+                <p class="font-bold text-gray-700">© 2025 Agid Al Syah Putra - Universitas Andalas</p>
+            </div>
         </footer>
 
     </div>
