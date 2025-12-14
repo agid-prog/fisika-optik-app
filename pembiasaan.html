@@ -30,10 +30,15 @@
             background: #ffffff;
         }
         .gradient-text {
-            background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    background: linear-gradient(135deg, #0099DD 0%, #006BA6 100%);
+    /* Versi standar, harus diletakkan paling akhir */
+    background-clip: text; 
+    /* Untuk kompatibilitas WebKit (Chrome, Safari, dll.) */
+    -webkit-background-clip: text;
+    /* Untuk memastikan warna teks transparan (khusus untuk teks gradien) */
+    -webkit-text-fill-color: transparent;
+    text-fill-color: transparent; /* Properti standar, meskipun jarang didukung penuh */
+}
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
             width: 20px;
@@ -60,7 +65,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <!-- PANEL KONTROL -->
+           <!-- PANEL KONTROL -->
             <div class="lg:col-span-1 space-y-4">
                 <div class="glass p-6 rounded-xl shadow-xl">
                     <h2 class="text-2xl font-bold text-indigo-700 mb-4">🎛️ Kontrol</h2>
@@ -69,37 +74,95 @@
                         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
                             <label class="block text-sm font-bold text-gray-800 mb-2">Medium 1 (Atas)</label>
                             <select id="material1" class="w-full p-2.5 border-2 border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 font-semibold">
-                                <option value="1.0003">🌫️ Udara (1.0003)</option>
-                                <option value="1.33" selected>💧 Air (1.33)</option>
-                                <option value="1.36">💎 Kuarsa Cair (1.36)</option>
-                                <option value="1.46">🧴 Gliserin (1.46)</option>
-                                <option value="1.47">🪟 Kaca Jendela (1.47)</option>
-                                <option value="1.50">🔬 Kaca Optik (1.50)</option>
-                                <option value="1.52">👓 Kaca Crown (1.52)</option>
-                                <option value="1.54">🧊 Plastik Akrilik (1.54)</option>
-                                <option value="1.61">🔭 Kaca Flint (1.61)</option>
-                                <option value="1.66">🔮 Safir (1.66)</option>
-                                <option value="2.42">💍 Berlian (2.42)</option>
+                                <optgroup label="GAS">
+                                    <option value="1.0">Vakum (1.0)</option>
+                                    <option value="1.000293">Udara (STP) (1.000293)</option>
+                                    <option value="1.000271">Oksigen (1.000271)</option>
+                                    <option value="1.000298">Nitrogen (1.000298)</option>
+                                    <option value="1.00045">Karbon Dioksida (1.00045)</option>
+                                </optgroup>
+                                <optgroup label="CAIRAN">
+                                    <option value="1.333" selected>Air (Murni) (1.333)</option>
+                                    <option value="1.339">Air Laut (1.339)</option>
+                                    <option value="1.361">Etanol (1.361)</option>
+                                    <option value="1.329">Metanol (1.329)</option>
+                                    <option value="1.473">Gliserin (1.473)</option>
+                                    <option value="1.47">Minyak Zaitun (1.47)</option>
+                                </optgroup>
+                                <optgroup label="KACA">
+                                    <option value="1.517">Kaca Crown (BK7) (1.517)</option>
+                                    <option value="1.66">Kaca Flint (1.66)</option>
+                                    <option value="1.458">Fused Silica (1.458)</option>
+                                    <option value="1.474">Pyrex (1.474)</option>
+                                    <option value="1.77">Safir Sintetis (1.77)</option>
+                                </optgroup>
+                                <optgroup label="KRISTAL">
+                                    <option value="2.417">Berlian (2.417)</option>
+                                    <option value="2.65">Moissanite (2.65)</option>
+                                    <option value="1.92">Zirkon (1.92)</option>
+                                    <option value="1.544">Kuarsa (SiO₂) (1.544)</option>
+                                    <option value="1.76">Ruby (1.76)</option>
+                                </optgroup>
+                                <optgroup label="POLIMER">
+                                    <option value="1.49">Acrylic (PMMA) (1.49)</option>
+                                    <option value="1.586">Polycarbonate (1.586)</option>
+                                    <option value="1.53">Nylon (1.53)</option>
+                                    <option value="1.35">Teflon (PTFE) (1.35)</option>
+                                </optgroup>
+                                <optgroup label="LAINNYA">
+                                    <option value="1.309">Es (1.309)</option>
+                                    <option value="1.40">Kayu (1.40)</option>
+                                    <option value="1.47">Kertas (1.47)</option>
+                                </optgroup>
                             </select>
-                            <div class="mt-2 text-xs text-indigo-700 font-semibold">Indeks Bias: <span id="n1-val">1.33</span></div>
+                            <div class="mt-2 text-xs text-indigo-700 font-semibold">Indeks Bias: <span id="n1-val">1.333</span></div>
                         </div>
 
                         <div class="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-lg">
                             <label class="block text-sm font-bold text-gray-800 mb-2">Medium 2 (Bawah)</label>
                             <select id="material2" class="w-full p-2.5 border-2 border-cyan-300 rounded-lg focus:ring-2 focus:ring-cyan-500 font-semibold">
-                                <option value="1.0003" selected>🌫️ Udara (1.0003)</option>
-                                <option value="1.33">💧 Air (1.33)</option>
-                                <option value="1.36">💎 Kuarsa Cair (1.36)</option>
-                                <option value="1.46">🧴 Gliserin (1.46)</option>
-                                <option value="1.47">🪟 Kaca Jendela (1.47)</option>
-                                <option value="1.50">🔬 Kaca Optik (1.50)</option>
-                                <option value="1.52">👓 Kaca Crown (1.52)</option>
-                                <option value="1.54">🧊 Plastik Akrilik (1.54)</option>
-                                <option value="1.61">🔭 Kaca Flint (1.61)</option>
-                                <option value="1.66">🔮 Safir (1.66)</option>
-                                <option value="2.42">💍 Berlian (2.42)</option>
+                                <optgroup label="GAS">
+                                    <option value="1.0">Vakum (1.0)</option>
+                                    <option value="1.000293" selected>Udara (STP) (1.000293)</option>
+                                    <option value="1.000271">Oksigen (1.000271)</option>
+                                    <option value="1.000298">Nitrogen (1.000298)</option>
+                                    <option value="1.00045">Karbon Dioksida (1.00045)</option>
+                                </optgroup>
+                                <optgroup label="CAIRAN">
+                                    <option value="1.333">Air (Murni) (1.333)</option>
+                                    <option value="1.339">Air Laut (1.339)</option>
+                                    <option value="1.361">Etanol (1.361)</option>
+                                    <option value="1.329">Metanol (1.329)</option>
+                                    <option value="1.473">Gliserin (1.473)</option>
+                                    <option value="1.47">Minyak Zaitun (1.47)</option>
+                                </optgroup>
+                                <optgroup label="KACA">
+                                    <option value="1.517">Kaca Crown (BK7) (1.517)</option>
+                                    <option value="1.66">Kaca Flint (1.66)</option>
+                                    <option value="1.458">Fused Silica (1.458)</option>
+                                    <option value="1.474">Pyrex (1.474)</option>
+                                    <option value="1.77">Safir Sintetis (1.77)</option>
+                                </optgroup>
+                                <optgroup label="KRISTAL">
+                                    <option value="2.417">Berlian (2.417)</option>
+                                    <option value="2.65">Moissanite (2.65)</option>
+                                    <option value="1.92">Zirkon (1.92)</option>
+                                    <option value="1.544">Kuarsa (SiO₂) (1.544)</option>
+                                    <option value="1.76">Ruby (1.76)</option>
+                                </optgroup>
+                                <optgroup label="POLIMER">
+                                    <option value="1.49">Acrylic (PMMA) (1.49)</option>
+                                    <option value="1.586">Polycarbonate (1.586)</option>
+                                    <option value="1.53">Nylon (1.53)</option>
+                                    <option value="1.35">Teflon (PTFE) (1.35)</option>
+                                </optgroup>
+                                <optgroup label="LAINNYA">
+                                    <option value="1.309">Es (1.309)</option>
+                                    <option value="1.40">Kayu (1.40)</option>
+                                    <option value="1.47">Kertas (1.47)</option>
+                                </optgroup>
                             </select>
-                            <div class="mt-2 text-xs text-cyan-700 font-semibold">Indeks Bias: <span id="n2-val">1.0003</span></div>
+                            <div class="mt-2 text-xs text-cyan-700 font-semibold">Indeks Bias: <span id="n2-val">1.000293</span></div>
                         </div>
 
                         <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg">
@@ -215,11 +278,10 @@
         function drawGrid() {
             if (!showGrid.checked) return;
             ctx.save();
-            ctx.strokeStyle = '#475569'; // Warna lebih gelap
+            ctx.strokeStyle = '#475569';
             ctx.lineWidth = 1.5;
-            ctx.setLineDash([5, 5]); // Garis putus-putus
+            ctx.setLineDash([5, 5]);
             
-            // Garis vertikal
             for (let i = 0; i <= W; i += 50) {
                 ctx.beginPath();
                 ctx.moveTo(i, 0);
@@ -227,7 +289,6 @@
                 ctx.stroke();
             }
             
-            // Garis horizontal
             for (let i = 0; i <= H; i += 50) {
                 ctx.beginPath();
                 ctx.moveTo(0, i);
@@ -240,7 +301,6 @@
         }
 
         function drawInterface() {
-            // Background gradien dulu
             const grad1 = ctx.createLinearGradient(0, 0, 0, MID);
             grad1.addColorStop(0, '#E0F4FF');
             grad1.addColorStop(1, '#7DD3FC');
@@ -336,7 +396,7 @@
 
             ctx.clearRect(0, 0, W, H);
             drawInterface();
-            drawGrid(); // Grid digambar TERAKHIR supaya di atas semua
+            drawGrid();
 
             let thetaC = NaN;
             if (n1 > n2) {
@@ -400,16 +460,16 @@
 
         function setPreset(type) {
             if (type === 'air-udara') {
-                mat1.value = '1.33';
-                mat2.value = '1.0003';
+                mat1.value = '1.333';
+                mat2.value = '1.000293';
                 slider.value = '48';
             } else if (type === 'kaca-udara') {
-                mat1.value = '1.52';
-                mat2.value = '1.0003';
+                mat1.value = '1.517';
+                mat2.value = '1.000293';
                 slider.value = '42';
             } else if (type === 'berlian-air') {
-                mat1.value = '2.42';
-                mat2.value = '1.33';
+                mat1.value = '2.417';
+                mat2.value = '1.333';
                 slider.value = '30';
             }
             update();
@@ -424,4 +484,4 @@
         window.addEventListener('load', () => setTimeout(update, 500));
     </script>
 </body>
-</html>
+</html>>
